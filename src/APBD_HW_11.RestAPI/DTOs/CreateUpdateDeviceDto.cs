@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace APBD_HW_11.RestAPI.DTOs;
 
-record CreateUpdateDeviceDto
+public record CreateUpdateDeviceDto
 {
     [Required, StringLength(150)]
     public string Name { get; init; } = default!;
