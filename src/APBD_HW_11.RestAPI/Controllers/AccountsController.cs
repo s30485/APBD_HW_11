@@ -3,7 +3,6 @@ using APBD_HW_11.RestAPI.Models;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization;
 using APBD_HW_11.RestAPI.DTOs.Accounts;
 
 namespace APBD_HW_11.RestAPI.Controllers;
@@ -20,10 +19,10 @@ public class AccountsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Register(RegisterDto dto)
+    public async Task<IResult> Register(RegisterDto dto)
     {
         if (await _context.Accounts.AnyAsync(a => a.Username == dto.Username))
-            return BadRequest("Username already exists");
+            return Results.BadRequest("Username already exists");
 
         using var hmac = new HMACSHA512();
         var account = new Account
@@ -31,12 +30,12 @@ public class AccountsController : ControllerBase
             Username = dto.Username,
             PasswordSalt = hmac.Key,
             PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(dto.Password)),
-            RoleId = 2 //default: User
+            RoleId = 2 //default to User
         };
 
         _context.Accounts.Add(account);
         await _context.SaveChangesAsync();
 
-        return Created($"/api/accounts/{account.Id}", new { account.Id, account.Username });
+        return Results.Created($"/api/accounts/{account.Id}", new { account.Id, account.Username });
     }
 }

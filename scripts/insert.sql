@@ -40,3 +40,5 @@ INSERT INTO DeviceEmployee (DeviceId, EmployeeId, IssueDate, ReturnDate) VALUES
 (3, 3, '2022-08-05', NULL),
 (4, 4, '2023-11-01', NULL),
 (5, 5, '2021-05-25', '2023-05-25');
+
+INSERT INTO Role (Id, Name) VALUES (1, 'Admin'), (2, 'User');

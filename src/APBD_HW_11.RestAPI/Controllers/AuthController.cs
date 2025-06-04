@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using APBD_HW_11.RestAPI.Models;
 using APBD_HW_11.RestAPI.Helpers.Extensions;
-using APBD_HW_11.RestAPI.Helpers.Options;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using System.Security.Cryptography;
 using System.Text;
 using APBD_HW_11.RestAPI.DTOs.Accounts;
@@ -24,22 +22,22 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Authenticate(LoginDto dto)
+    public async Task<IResult> Authenticate(LoginDto dto)
     {
         var account = await _context.Accounts
             .Include(a => a.Role)
             .FirstOrDefaultAsync(a => a.Username == dto.Username);
 
         if (account == null)
-            return Unauthorized("Invalid credentials");
+            return Results.Unauthorized();
 
         using var hmac = new HMACSHA512(account.PasswordSalt);
         var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(dto.Password));
 
         if (!computedHash.SequenceEqual(account.PasswordHash))
-            return Unauthorized("Invalid credentials");
+            return Results.Unauthorized();
 
         var token = _jwtHelper.GenerateToken(account);
-        return Ok(new TokenDto { AccessToken = token });
+        return Results.Ok(new TokenDto { AccessToken = token });
     }
 }
