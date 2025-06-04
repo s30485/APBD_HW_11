@@ -6,16 +6,21 @@ Before running the application, create an `appsettings.json` file in the project
 
 ```json
 {
+  "Logging": {
+    "LogLevel": {
+      "Default": "Debug",
+      "System": "Information",
+      "Microsoft": "Information"
+    }
+  },
   "Jwt": {
-    "Issuer": "your-issuer",
-    "Audience": "your-audience",
+    "Issuer": "http://localhost:5300/",
+    "Audience": "http://localhost:5300/",
     "SecretKey": "your-secret-key",
     "ExpiryMinutes": 60
   },
   "ConnectionStrings": {
-    "DefaultConnection": "your-secure-db-connection"
+    "DefaultConnection": "your-conn-str"
   }
 }
 ```
-
-**IMPORTANT:** Do not publish real connection strings or secret keys to version control.
