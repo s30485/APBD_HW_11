@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using APBD_HW_11.RestAPI;
 using APBD_HW_11.RestAPI.Interfaces;
 using APBD_HW_11.RestAPI.Models;
+using APBD_HW_11.RestAPI.Services;
 using APBD_HW_11.RestAPI.Validators;
 using Microsoft.AspNetCore.Identity;
 
@@ -24,6 +25,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<MasterContext>(options =>
     options.UseSqlServer(connectionString));
 
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IDeviceService, DeviceService>();
 builder.Services.AddSingleton<IValidatorService, ValidatorService>();
 
 builder.Services.AddScoped<IPasswordHasher<Account>, PasswordHasher<Account>>();
