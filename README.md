@@ -1,19 +1,21 @@
-to run the app correctly, in appsettings you should include a connection string to a database, whether its a local db like in docker, or a remote one - it's up to you.
+# APBD_HW_11 Secure REST API
 
+## Configuration
+
+Before running the application, create an `appsettings.json` file in the project root with the following structure:
+
+```json
 {
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft.AspNetCore": "Warning"
-    }
+  "Jwt": {
+    "Issuer": "your-issuer",
+    "Audience": "your-audience",
+    "SecretKey": "your-secret-key",
+    "ExpiryMinutes": 60
   },
-  "AllowedHosts": "*",
   "ConnectionStrings": {
-    "DefaultConnection": "YOUR-CONNECTION-STRING"
+    "DefaultConnection": "your-secure-db-connection"
   }
 }
+```
 
-The reasons that I did not split my solution into many projects are:
-1. The project is not complicated enough, so there is no need to split it
-2. I don't reuse the DTOs anywhere else, so no need to split
-3. The project is easier to read and understand, so you have less to check 😏👍
+**IMPORTANT:** Do not publish real connection strings or secret keys to version control.
