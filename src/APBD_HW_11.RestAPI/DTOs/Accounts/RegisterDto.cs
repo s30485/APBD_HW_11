@@ -13,4 +13,9 @@ public class RegisterDto
     [MinLength(12)]
     [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{12,}$")]
     public string Password { get; set; } = null!;
+    
+    [Required]
+    public int? EmployeeId { get; set; } = null!;
+    
+    public int? RoleId { get; set; } = null!;
 }

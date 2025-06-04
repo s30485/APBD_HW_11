@@ -1,9 +1,13 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
-using APBD_HW_11.RestAPI.Models;
+using APBD_HW_11.RestAPI;
 using System.Security.Cryptography;
 using System.Text;
+using APBD_HW_11.RestAPI.DTOs;
 using Microsoft.EntityFrameworkCore;
 using APBD_HW_11.RestAPI.DTOs.Accounts;
+using APBD_HW_11.RestAPI.Interfaces;
+using APBD_HW_11.RestAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
@@ -13,33 +17,40 @@ namespace APBD_HW_11.RestAPI.Controllers;
 [Route("api/accounts")]
 public class AccountsController : ControllerBase
 {
-    private readonly MasterContext _context;
-    private readonly IPasswordHasher<Account> _passwordHasher;
+    private readonly IAccountService _accountService;
 
-    public AccountsController(MasterContext context, IPasswordHasher<Account> passwordHasher)
+    public AccountsController(IAccountService accountService)
     {
-        _context = context;
-        _passwordHasher = passwordHasher;
+        _accountService = accountService;
     }
+
+    [HttpGet]
+    [Authorize(Roles = "Admin")]
+    public async Task<IResult> GetAllAccounts()
+        => await _accountService.GetAllAccountsAsync();
+
+    [HttpGet("{id:int}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IResult> GetAccountById(int id)
+        => await _accountService.GetAccountByIdAsync(id);
+
+    [HttpGet("me")]
+    [Authorize(Roles = "User")]
+    public async Task<IResult> GetOwnAccount()
+        => await _accountService.GetOwnAccountAsync(User);
 
     [HttpPost]
-    [AllowAnonymous]
-    public async Task<ActionResult<Account>> Register([FromBody] RegisterDto dto)
-    {
-        if (await _context.Accounts.AnyAsync(a => a.Username == dto.Username))
-            return BadRequest("Username already exists");
+    [Authorize(Roles = "Admin")]
+    public async Task<IResult> CreateAccount(RegisterDto dto)
+        => await _accountService.CreateAccountAsync(dto);
 
-        var account = new Account
-        {
-            Username = dto.Username,
-            RoleId = 2 // default: User
-        };
+    [HttpPut("me")]
+    [Authorize(Roles = "User")]
+    public async Task<IResult> UpdateOwnAccount(UpdateAccountDto dto)
+        => await _accountService.UpdateOwnAccountAsync(User, dto);
 
-        account.Password = _passwordHasher.HashPassword(account, dto.Password);
-
-        _context.Accounts.Add(account);
-        await _context.SaveChangesAsync();
-
-        return CreatedAtAction(nameof(Register), new { id = account.Id }, new { account.Id, account.Username });
-    }
+    [HttpDelete("{id:int}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IResult> DeleteAccount(int id)
+        => await _accountService.DeleteAccountAsync(id);
 }

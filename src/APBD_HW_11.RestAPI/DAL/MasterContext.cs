@@ -18,11 +18,9 @@ public partial class MasterContext : DbContext
 
     
     public virtual DbSet<Account> Accounts { get; set; }
-    
     public virtual DbSet<Device> Devices { get; set; }
 
     public virtual DbSet<DeviceEmployee> DeviceEmployees { get; set; }
-
     public virtual DbSet<DeviceType> DeviceTypes { get; set; }
 
     public virtual DbSet<Employee> Employees { get; set; }
@@ -30,6 +28,8 @@ public partial class MasterContext : DbContext
     public virtual DbSet<Person> People { get; set; }
 
     public virtual DbSet<Position> Positions { get; set; }
+    
+    public virtual DbSet<Role> Roles { get; set; }
 
     /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer("Name=DefaultConnection");*/ 
