@@ -4,6 +4,8 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using APBD_HW_11.RestAPI.DTOs.Accounts;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace APBD_HW_11.RestAPI.Controllers;
 
@@ -12,30 +14,32 @@ namespace APBD_HW_11.RestAPI.Controllers;
 public class AccountsController : ControllerBase
 {
     private readonly MasterContext _context;
+    private readonly IPasswordHasher<Account> _passwordHasher;
 
-    public AccountsController(MasterContext context)
+    public AccountsController(MasterContext context, IPasswordHasher<Account> passwordHasher)
     {
         _context = context;
+        _passwordHasher = passwordHasher;
     }
 
     [HttpPost]
-    public async Task<IResult> Register(RegisterDto dto)
+    [AllowAnonymous]
+    public async Task<ActionResult<Account>> Register([FromBody] RegisterDto dto)
     {
         if (await _context.Accounts.AnyAsync(a => a.Username == dto.Username))
-            return Results.BadRequest("Username already exists");
+            return BadRequest("Username already exists");
 
-        using var hmac = new HMACSHA512();
         var account = new Account
         {
             Username = dto.Username,
-            PasswordSalt = hmac.Key,
-            PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(dto.Password)),
-            RoleId = 2 //default to User
+            RoleId = 2 // default: User
         };
+
+        account.Password = _passwordHasher.HashPassword(account, dto.Password);
 
         _context.Accounts.Add(account);
         await _context.SaveChangesAsync();
 
-        return Results.Created($"/api/accounts/{account.Id}", new { account.Id, account.Username });
+        return CreatedAtAction(nameof(Register), new { id = account.Id }, new { account.Id, account.Username });
     }
 }

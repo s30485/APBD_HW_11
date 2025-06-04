@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
 using APBD_HW_11.RestAPI.DTOs.Accounts;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace APBD_HW_11.RestAPI.Controllers;
 
@@ -14,15 +16,18 @@ public class AuthController : ControllerBase
 {
     private readonly MasterContext _context;
     private readonly JwtHelper _jwtHelper;
+    private readonly IPasswordHasher<Account> _passwordHasher;
 
-    public AuthController(MasterContext context, JwtHelper jwtHelper)
+    public AuthController(MasterContext context, JwtHelper jwtHelper, IPasswordHasher<Account> passwordHasher)
     {
         _context = context;
         _jwtHelper = jwtHelper;
+        _passwordHasher = passwordHasher;
     }
 
     [HttpPost]
-    public async Task<IResult> Authenticate(LoginDto dto)
+    [AllowAnonymous]
+    public async Task<IResult> Authenticate([FromBody] LoginDto dto)
     {
         var account = await _context.Accounts
             .Include(a => a.Role)
@@ -31,10 +36,8 @@ public class AuthController : ControllerBase
         if (account == null)
             return Results.Unauthorized();
 
-        using var hmac = new HMACSHA512(account.PasswordSalt);
-        var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(dto.Password));
-
-        if (!computedHash.SequenceEqual(account.PasswordHash))
+        var result = _passwordHasher.VerifyHashedPassword(account, account.Password, dto.Password);
+        if (result == PasswordVerificationResult.Failed)
             return Results.Unauthorized();
 
         var token = _jwtHelper.GenerateToken(account);

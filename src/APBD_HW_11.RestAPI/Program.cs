@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using APBD_HW_11.RestAPI;
 using APBD_HW_11.RestAPI.Interfaces;
+using APBD_HW_11.RestAPI.Models;
 using APBD_HW_11.RestAPI.Validators;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +25,9 @@ builder.Services.AddDbContext<MasterContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddSingleton<IValidatorService, ValidatorService>();
+
+builder.Services.AddScoped<IPasswordHasher<Account>, PasswordHasher<Account>>();
+
 
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
 builder.Services.AddSingleton<JwtHelper>();
