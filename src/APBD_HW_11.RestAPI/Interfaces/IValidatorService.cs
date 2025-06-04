@@ -1,4 +1,4 @@
-﻿namespace APBD_HW_09.RestAPI.Interfaces;
+﻿namespace APBD_HW_11.RestAPI.Interfaces;
 
 public interface IValidatorService
 {

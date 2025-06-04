@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace APBD_HW_09.RestAPI.DTOs;
+namespace APBD_HW_11.RestAPI.DTOs;
 
 public record DeviceDetailDto
 {

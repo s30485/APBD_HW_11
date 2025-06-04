@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace APBD_HW_09.RestAPI;
+namespace APBD_HW_11.RestAPI;
 
 public partial class MasterContext : DbContext
 {

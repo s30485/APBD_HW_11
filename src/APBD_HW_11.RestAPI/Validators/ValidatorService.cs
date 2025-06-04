@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using APBD_HW_09.RestAPI.Interfaces;
+using APBD_HW_11.RestAPI.Interfaces;
 
-namespace APBD_HW_09.RestAPI.Validators;
+namespace APBD_HW_11.RestAPI.Validators;
 
 public class ValidatorService : IValidatorService
 {

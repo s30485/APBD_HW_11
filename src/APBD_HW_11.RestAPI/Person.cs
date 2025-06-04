@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace APBD_HW_09.RestAPI;
+namespace APBD_HW_11.RestAPI;
 
 public partial class Person
 {

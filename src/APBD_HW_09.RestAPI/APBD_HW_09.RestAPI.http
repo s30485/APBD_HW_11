@@ -1,6 +1,0 @@
-@APBD_HW_09.RestAPI_HostAddress = http://localhost:5016
-
-GET {{APBD_HW_09.RestAPI_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
