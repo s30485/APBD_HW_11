@@ -18,6 +18,7 @@ public partial class MasterContext : DbContext
 
     
     public virtual DbSet<Account> Accounts { get; set; }
+    
     public virtual DbSet<Device> Devices { get; set; }
 
     public virtual DbSet<DeviceEmployee> DeviceEmployees { get; set; }
