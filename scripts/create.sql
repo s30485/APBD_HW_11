@@ -1,7 +1,7 @@
-REATE TABLE DeviceType (
-    Id INT NOT NULL IDENTITY(1,1),
-    Name VARCHAR(100) NOT NULL UNIQUE,
-    CONSTRAINT PK_DeviceType PRIMARY KEY (Id)
+CREATE TABLE DeviceType (
+                            Id INT NOT NULL IDENTITY(1,1),
+                            Name VARCHAR(100) NOT NULL UNIQUE,
+                            CONSTRAINT PK_DeviceType PRIMARY KEY (Id)
 );
 
 CREATE TABLE Position (
@@ -52,4 +52,10 @@ CREATE TABLE DeviceEmployee (
                                 CONSTRAINT PK_DeviceEmployee PRIMARY KEY (Id),
                                 CONSTRAINT FK_DeviceEmployee_Device FOREIGN KEY (DeviceId) REFERENCES Device(Id),
                                 CONSTRAINT FK_DeviceEmployee_Employee FOREIGN KEY (EmployeeId) REFERENCES Employee(Id)
+);
+
+CREATE TABLE Role (
+                      Id INT NOT NULL IDENTITY(1,1),
+                      Name VARCHAR(100) NOT NULL UNIQUE,
+                      CONSTRAINT PK_Role PRIMARY KEY (Id)
 );
